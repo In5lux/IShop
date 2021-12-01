@@ -1,18 +1,18 @@
 const getGoods = () => {
-  const links = document.querySelectorAll(".navigation-link");
+  const links = document.querySelectorAll('.navigation-link');
 
-  const btnVwAll = document.querySelectorAll(".button-view-all");
+  const more = document.querySelector('.more');
 
   const renderGoods = (goods) => {
-    const goodsContainer = document.querySelector(".long-goods-list");
-    goodsContainer.innerHTML = "";
+    const goodsContainer = document.querySelector('.long-goods-list');
+    goodsContainer.innerHTML = '';
     goods.forEach((good) => {
-      const goodBlock = document.createElement("div");
-      goodBlock.classList.add("col-lg-3");
-      goodBlock.classList.add("col-sm-6");
+      const goodBlock = document.createElement('div');
+      goodBlock.classList.add('col-lg-3');
+      goodBlock.classList.add('col-sm-6');
       goodBlock.innerHTML = `
 	  <div class="goods-card">
-            <span class="label ${good.label ? null : "d-none"}">${
+            <span class="label ${good.label ? null : 'd-none'}">${
         good.label
       }</span>
             <img src="db/${good.img}" alt="${good.name}" class="goods-image">
@@ -30,32 +30,23 @@ const getGoods = () => {
   };
 
   const getData = (value, category) => {
-    fetch("https://test-b4948-default-rtdb.firebaseio.com/db.json")
+    fetch('https://test-b4948-default-rtdb.firebaseio.com/db.json')
       .then((res) => res.json())
       .then((data) => {
         const array = data.filter((item) =>
           category ? item[category] === value : data
         );
-        localStorage.setItem("goods", JSON.stringify(array));
-        if (!window.location.pathname.includes("goods.html")) {
-          window.location.href = "goods.html";
+        localStorage.setItem('goods', JSON.stringify(array));
+        if (!window.location.pathname.includes('goods.html')) {
+          window.location.href = 'goods.html';
         } else {
           renderGoods(array);
         }
       });
   };
 
-  if (btnVwAll) {
-    btnVwAll.forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        getData();
-      });
-    });
-  }
-
   links.forEach((link) => {
-    link.addEventListener("click", (event) => {
+    link.addEventListener('click', (event) => {
       event.preventDefault();
       const Linkvalue = link.textContent;
       const category = link.dataset.field;
@@ -64,10 +55,16 @@ const getGoods = () => {
   });
 
   if (
-    localStorage.getItem("goods") &&
-    window.location.pathname.includes("goods.html")
+    localStorage.getItem('goods') &&
+    window.location.pathname.includes('goods.html')
   ) {
-    renderGoods(JSON.parse(localStorage.getItem("goods")));
+    renderGoods(JSON.parse(localStorage.getItem('goods')));
+  }
+  if (more) {
+    more.addEventListener('click', (event) => {
+      event.preventDefault();
+      getData();
+    });
   }
 };
 
